@@ -34,25 +34,35 @@ public class Servlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Process the clients form input here !!!
-		
+		boolean successful = false;
 
 		//Do something with the user input .....
-		String s_FirstName = request.getParameter("s_FirstName");
-		String s_FecondName = request.getParameter("s_LastName");
-		String s_FullName = s_FirstName + " "+ s_FecondName;
+		String s_UserName = request.getParameter("s_UserName");
+		String s_Password = request.getParameter("s_Password");
+		
+		if(s_UserName == "Zear" &&s_Password == "Friday"){
+			successful = true;
+		}
+		
+		String s_FullName = s_UserName + " "+ s_Password;
 		System.out.println(s_FullName);
 		
 		//Respond to the users input/request after processing
-		doGet(request, response);
+		doGet(request, response,successful);
 	}
 
 	/**Data is retrieved ('GET') from the server to the clients perspective
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response) 
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response, boolean success) throws ServletException, IOException {
 		//Process the servers response to the client here !!!
-
-		 PrintWriter out = response.getWriter();
-		 out.println("The input was: " + request.getParameter("s_FirstName") + " " + request.getParameter("s_LastName"));	
+		
+		PrintWriter out = response.getWriter();
+		if (success == true){
+		 out.println("Thank you :) ");	
+		}
+		else{
+			 out.println("Nope !");	
+		}
 	}
 }

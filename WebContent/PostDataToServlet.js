@@ -11,14 +11,14 @@ $(document).ready(function () {
 			dataObj[field.name] = field.value;
 		});
 
-		//alert (dataObj['firstName'] + " " +  dataObj['lastName'])
+		//alert (dataObj['username'] + " " +  dataObj['password'])
 
 
 		$('#userInputForm').on('submit', function (e) {
 			$.post('http://localhost:8080/SimpleFormArchitecture/Servlet', 
 				{
-					s_FirstName: dataObj['firstName'],
-					s_LastName: dataObj['lastName']
+					s_UserName: dataObj['username'],
+					s_Password: dataObj['password']
 				},
 				function (data, status) {
 					//This gets executed when post is successful
