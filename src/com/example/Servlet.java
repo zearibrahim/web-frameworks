@@ -15,10 +15,8 @@ import javax.servlet.http.HttpServletResponse;
  * Usage  : A simple servlet example using the POST and GET methods
  */
 
-
 @WebServlet("/Servlet")
 public class Servlet extends HttpServlet {
-	private static final long serialVersionUID = 1;
 
 	/**Class constructor
 	 * You can insert logic here on what to do when someone connects to your server
@@ -34,35 +32,24 @@ public class Servlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Process the clients form input here !!!
-		boolean successful = false;
 
+		//Get the HTML data
+		String s_user = request.getParameter("uname");
+		String s_pwd = request.getParameter("pwd");
+		
 		//Do something with the user input .....
-		String s_UserName = request.getParameter("s_UserName");
-		String s_Password = request.getParameter("s_Password");
-		
-		if(s_UserName == "Zear" &&s_Password == "Friday"){
-			successful = true;
-		}
-		
-		String s_FullName = s_UserName + " "+ s_Password;
-		System.out.println(s_FullName);
-		
+		System.out.printf("Received " + s_user + " and " + s_pwd);
 		//Respond to the users input/request after processing
-		doGet(request, response,successful);
+		doGet(response);
 	}
 
 	/**Data is retrieved ('GET') from the server to the clients perspective
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response) 
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response, boolean success) throws ServletException, IOException {
+	protected void doGet(HttpServletResponse response_to_send) throws ServletException, IOException {
 		//Process the servers response to the client here !!!
 		
-		PrintWriter out = response.getWriter();
-		if (success == true){
-		 out.println("Thank you :) ");	
-		}
-		else{
-			 out.println("Nope !");	
-		}
+		PrintWriter out = response_to_send.getWriter();
+		out.println("Thank you :) ");	
 	}
 }
