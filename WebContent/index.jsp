@@ -8,7 +8,7 @@
 	<body>  
 	  
 	<form action="Login" method = "post">  
-		<label>Name </label><input type="text" name="name">
+		<label>Name </label><input type="text" name="uname">
 		<label>Password </label><input type="text" name="pwd">   
 		<input type="submit" value="Send">  
 	</form>  

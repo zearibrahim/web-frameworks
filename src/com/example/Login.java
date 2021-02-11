@@ -1,71 +1,59 @@
 package com.example;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.PrintWriter;
+import java.util.Random;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;  
-import javax.servlet.http.HttpServletRequest;  
-import javax.servlet.http.HttpServletResponse;  
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+/**
+ * Servlet implementation class LoginServlet
+ */
 @WebServlet("/Login")
-public class Login extends HttpServlet {  
+public class Login extends HttpServlet {
 
-	private final String welcome_page = "welcome.jsp";
-	private String input_uname = "";
-	private String input_pwd = "";
-	private String result = "";
-	private final String SPECIAL_NAME = "SPECIAL-COOKIE";
-	private final String folder = "data";
-	/***
-	 * Receive Post request from client
-	 * @throws IOException 
-	 * @throws ServletException 
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {  
+    private final String username = "admin";
+    private final String password = "123";
 
-		//Get HTML form data
-		input_uname = request.getParameter("name");  
-		input_pwd = request.getParameter("pwd");  
-		
-		//Perform login procedure.
-		if(login(request, response,input_uname))
-		{
-			//Redirect user to welcome page if they logged in successfully
-			response.sendRedirect(request.getContextPath() + "/" + welcome_page);
-		}
-	}
+    protected void doPost(HttpServletRequest request,
+                          HttpServletResponse response) throws ServletException, IOException {
 
-	//Check if this login exists, and set cookie if it does
-	private boolean login (HttpServletRequest request, HttpServletResponse response, String uname){
+        // get request parameters for username and password
+        String username = request.getParameter("uname");
+        String password = request.getParameter("pwd");
 
-		/*
-		 * TODO: Read uname from directory of txt/csv file to see if this is a valid user
-		 * If it does not we add a new cookie and unique txt file
-		 * 
-		 * If it does, we read the data from that txt file and load the welcome page with it.
-		 */
+        if (this.username.equals(username) && this.password.equals(password)) {
+            //get the old session and invalidate
+            HttpSession oldSession = request.getSession(false);
+            if (oldSession != null) {
+                oldSession.invalidate();
+            }
+            //generate a new session
+            HttpSession newSession = request.getSession(true);
 
-		Cookie[] c = request.getCookies();
-		boolean result = false;
+            //setting session to expiry in 5
+            newSession.setMaxInactiveInterval(10);
+            
+            //Add random number
+            Random rand = new Random();
+            int n = rand.nextInt(1000);
 
-		for(int i=0;i<c.length;i++){  
-			System.out.println("Name: " + c[i].getName() +" & Value: "+ c[i].getValue());
-
-			//Check if the user has a special cookie for our domain
-			if(!c[i].getName().equals(SPECIAL_NAME)){
-
-				//Create a new cookie, set it's max alive time, and add it to the response.
-				Cookie cc = new Cookie(SPECIAL_NAME, input_uname);
-				cc.setMaxAge(60);//TODO: if cookie runs out of time - prevent user from accessing welcome page.
-				cc.setValue(input_uname);
-				response.addCookie(cc);
-				result = true;
-			}			
-		}	
-		return result;
-	}
-}
+            Cookie message = new Cookie("MY-COOKIE", "ID:" + n);
+            message.setMaxAge(10);
+            response.addCookie(message);
+            response.sendRedirect("user-welcome.jsp");
+        } else {
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.jsp");
+            PrintWriter out = response.getWriter();
+            out.println("<font color=red>Either username or password is wrong.</font>");
+            rd.include(request, response);
+        }
+    }
+} 
