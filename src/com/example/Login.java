@@ -30,8 +30,6 @@ public class Login extends HttpServlet {
 		//Get HTML form data
 		input_uname = request.getParameter("name");  
 		input_pwd = request.getParameter("pwd");  
-
-		getUser();
 		
 		//Perform login procedure.
 		if(login(request, response,input_uname))
