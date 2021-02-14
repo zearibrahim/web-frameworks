@@ -17,7 +17,7 @@ public class Logout extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        //invalidate the session if exists
+        //Invalidate the session if exists
         HttpSession session = request.getSession(false);
         if(session != null){
             session.invalidate();

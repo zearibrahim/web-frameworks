@@ -9,7 +9,8 @@
 	  
 	<form action="Login" method = "post">  
 		<label>Name </label><input type="text" name="uname">
-		<label>Password </label><input type="text" name="pwd">   
+		<label>Password </label><input type="text" name="pwd">
+		<p style = "color:red"><%= request.getAttribute("error") == null ? "" : request.getAttribute("error") %></p>   
 		<input type="submit" value="Send">  
 	</form>  
 	</body>  

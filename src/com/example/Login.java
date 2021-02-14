@@ -19,41 +19,27 @@ import javax.servlet.http.HttpSession;
 @WebServlet("/Login")
 public class Login extends HttpServlet {
 
-    private final String username = "admin";
-    private final String password = "123";
+	//TODO: Get username + password from csv/txt/data storage
+	private final String username = "admin";
+	private final String password = "123";
 
-    protected void doPost(HttpServletRequest request,
-                          HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
 
-        // get request parameters for username and password
-        String username = request.getParameter("uname");
-        String password = request.getParameter("pwd");
+		//Get request parameters for username and password
+		String uname = request.getParameter("uname");
+		String pwd = request.getParameter("pwd");
 
-        if (this.username.equals(username) && this.password.equals(password)) {
-            //get the old session and invalidate
-            HttpSession oldSession = request.getSession(false);
-            if (oldSession != null) {
-                oldSession.invalidate();
-            }
-            //generate a new session
-            HttpSession newSession = request.getSession(true);
-
-            //setting session to expiry in 5
-            newSession.setMaxInactiveInterval(10);
-            
-            //Add random number
-            Random rand = new Random();
-            int n = rand.nextInt(1000);
-
-            Cookie message = new Cookie("MY-COOKIE", "ID:" + n);
-            message.setMaxAge(10);
-            response.addCookie(message);
-            response.sendRedirect("user-welcome.jsp");
-        } else {
-            RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.jsp");
-            PrintWriter out = response.getWriter();
-            out.println("<font color=red>Either username or password is wrong.</font>");
-            rd.include(request, response);
-        }
-    }
+		if (this.username.equals(uname) && this.password.equals(pwd)) {
+			request.getSession().setAttribute("CURRENT_USER", this.username); //Add variable to session cookie
+			request.getSession().setMaxInactiveInterval(10); //Session cookie becomes invalid after 10s
+			
+			//Forward to welcome page
+			//QUESTION: Why do you think this is under WEB-INF?
+			request.getRequestDispatcher("/WEB-INF/user-welcome.jsp").forward(request, response);
+		} else {
+			request.setAttribute("error", "Wrong username or password");
+			request.getRequestDispatcher("/index.jsp").forward(request, response);
+		}
+	}
 } 
