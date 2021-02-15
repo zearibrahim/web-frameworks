@@ -10,7 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class LogoutServlet
+ * This class invalidates a session when the user clicks the logout button.
+ * NOTE: This can also be achieved using JAVA code in the actual JSP file.
  */
 @WebServlet("/Logout")
 public class Logout extends HttpServlet {

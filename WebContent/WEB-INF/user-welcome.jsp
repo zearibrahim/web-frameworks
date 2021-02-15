@@ -17,5 +17,15 @@
 			<form action="Logout" method="post">
 				<input type="submit" value="Logout" >
 			</form>
+			
+			<!-- 
+				INSERT CONVERTOR CODE (i.e this is only accessible when the user is logged in)
+				
+				POSSSIBLE IDEAS:
+				
+				1) Form with action and POST Method
+				2) Pure Javascript conversion code (no server communication. Data is only sent to server when successful.
+				3) ...
+			-->
 	</body>
 </html>
