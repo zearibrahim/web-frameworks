@@ -36,7 +36,7 @@ public class Login extends HttpServlet {
 			
 			// Session cookie becomes invalid after 10s
 			// TODO: This does not prevent users from re-visiting the login page with back/forward buttons. 
-			// TODO: See LoginSessionFilter class.
+			// TODO: See https://stackoverflow.com/questions/4194207/prevent-user-from-seeing-previously-visited-secured-page-after-logout
 			request.getSession().setMaxInactiveInterval(10); 
 			
 			// Forward to welcome page
