@@ -30,19 +30,27 @@ public class Authenticator{
 		return checkCredentials() ? true : false;
 	}
 
-	//This method only checks if a user exists within the MySQL Database.
-	//TODO: This method needs to be split as it's doing too much. Split into: 
-	//		1) Acquiring the MySQL Connection only
-	//		   -- The connection object then needs to be attached to a cookie
-	//		   -- The cookie + SQL connection is then invalidated when the user closes the session / times out
-	//		2) Executing different types of SQL statements
-	//		   -- Inserting into different tables
-	//		   -- Reading from different tables
+	/**
+	 * This method only checks if a user exists within the MySQL Database.
+	 * It is not efficient and uses plain text password.
+	 */
+
+	/* 
+	 * TODO: Replace plain text passwords with authentication tokens
+	 * 
+	 * TODO: This method needs to be split as it's doing too much. Split into:
+	 * TODO:	 1) Acquiring the MySQL Connection only
+	 * 			-- The connection object then needs to be attached to a cookie
+	 * 			-- The cookie + SQL connection is then invalidated when the user closes the session / times out
+	 * TODO:	 2) Executing different types of SQL statements
+	 * 			-- Inserting into different tables
+	 * 			-- Reading from different tables
+	 */
 	public boolean checkCredentials(){
 		boolean status = false;
 
 		String dbname = "group_a_dbs"; //<--Schema name
-		String url = "jdbc:mysql://129.151.75.225:3306/" + dbname; //<--IP + DB name
+		String url = "jdbc:mysql://000.000.00.000:3306/" + dbname; //<--Insert IP
 		String username = "root"; 
 		String password = ""; //<--Put your groups password here
 
