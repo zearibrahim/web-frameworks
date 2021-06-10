@@ -1,14 +1,14 @@
 package com.example;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.Scanner;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /***
  * @author Zear
- * This is a simple class to perform string comparison on a local file.
+ * This is a simple class to perform string comparison on a database.
  * This is not a proper authenticator and does not make use of encrypted tokens.
  */
 @SuppressWarnings("serial")
@@ -27,29 +27,53 @@ public class Authenticator{
 	// TODO: In assignment 2.2 discuss authentication tokens with the idea that
 	// plain text comparison is not secure.
 	public boolean authenticateUser() throws IOException{	
-		return readUserFile() ? true : false;
+		return checkCredentials() ? true : false;
 	}
 
-	/*
-	 * NOTE: This is a simple persistent data storage facility.
-	 * It is not a proper data source such as a database
-	 * 
-	 * TODO: In Assignment 2.2, discuss the benefit of using proper data sources such as MySQL and NoSQL
-	 * 
-	 * TODO: Replace with logic to read file name based on username
-	 */
-	private boolean readUserFile() throws IOException{
+	//This method only checks if a user exists within the MySQL Database.
+	//TODO: This method needs to be split as it's doing too much. Split into: 
+	//		1) Acquiring the MySQL Connection only
+	//		   -- The connection object then needs to be attached to a cookie
+	//		   -- The cookie + SQL connection is then invalidated when the user closes the session / times out
+	//		2) Executing different types of SQL statements
+	//		   -- Inserting into different tables
+	//		   -- Reading from different tables
+	public boolean checkCredentials(){
 		boolean status = false;
-		File f = new File("/Users/Zear/Desktop/Data/user.txt");
 
-		if(f.exists()){
-			//TODO: Replace with actual data from username password file
-			this.stored_username = "admin";
-			this.stored_password = "123";
-			
-			if(uname.equals(this.stored_username) && pwd.equals(this.stored_password)){
-				status = true;
+		String dbname = "group_a_dbs"; //<--Schema name
+		String url = "jdbc:mysql://129.151.75.225:3306/" + dbname; //<--IP + DB name
+		String username = "root"; 
+		String password = ""; //<--Put your groups password here
+
+		System.out.println("Connecting database...");
+
+		try{
+			Connection connection = DriverManager.getConnection(url, username, password);
+			System.out.println("Database connected!");
+
+			//Create SQL Statement
+			Statement stmt = connection.createStatement();
+
+			//Execute SQL Statement
+			ResultSet rs = stmt.executeQuery("SELECT * FROM users;");
+
+			//Get all the rows from this table
+			while (rs.next()) {
+				System.out.println(rs.getString("id"));
+
+				//Store this rows details
+				this.stored_username = rs.getString("name");
+				this.stored_password = rs.getString("password");
+
+				//Check if it matches the user that is requesting to log in
+				if(uname.equals(this.stored_username) && pwd.equals(this.stored_password)){
+					status = true;
+				}
 			}
+			connection.close();
+		} catch (SQLException e) {
+			throw new IllegalStateException("Cannot connect the database!", e);
 		}
 		return status;
 	}
